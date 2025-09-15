@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Handwriting Generator</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <div class="container">
+          <h1 class="title">
+            <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+              <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+              <path d="M2 2l7.586 7.586"/>
+              <circle cx="11" cy="11" r="2"/>
+            </svg>
+            AI Handwriting Generator
+          </h1>
+          <p class="subtitle">Transform your text into beautiful, animated handwriting</p>
+        </div>
+      </header>
+
+      <main class="main">
+        <div class="container">
+          <div class="input-section">
+            <div class="form-group">
+              <label for="text-input" class="label">Enter your text</label>
+              <textarea 
+                id="text-input" 
+                class="text-input" 
+                placeholder="Type your message here... (max 75 characters per line)"
+                rows="4"
+              ></textarea>
+            </div>
+
+            <div class="controls-grid">
+              <div class="form-group">
+                <label for="style-select" class="label">Writing Style</label>
+                <select id="style-select" class="select">
+                  <option value="0">Style 1 - Clean</option>
+                  <option value="1">Style 2 - Casual</option>
+                  <option value="2">Style 3 - Elegant</option>
+                  <option value="7" selected>Style 4 - Classic</option>
+                  <option value="9">Style 5 - Modern</option>
+                  <option value="12">Style 6 - Artistic</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="bias-slider" class="label">Neatness</label>
+                <div class="slider-container">
+                  <input type="range" id="bias-slider" class="slider" min="0.1" max="1.0" step="0.1" value="0.7">
+                  <div class="slider-labels">
+                    <span>Messy</span>
+                    <span>Neat</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="speed-slider" class="label">Animation Speed</label>
+                <div class="slider-container">
+                  <input type="range" id="speed-slider" class="slider" min="0.5" max="3.0" step="0.1" value="1.0">
+                  <div class="slider-labels">
+                    <span>Slow</span>
+                    <span>Fast</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="color-picker" class="label">Ink Color</label>
+                <input type="color" id="color-picker" class="color-picker" value="#2563eb">
+              </div>
+            </div>
+
+            <button id="generate-btn" class="generate-btn">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+              </svg>
+              Generate Handwriting
+            </button>
+          </div>
+
+          <div class="output-section">
+            <div class="output-header">
+              <h2 class="output-title">Generated Handwriting</h2>
+              <div class="output-controls">
+                <button id="replay-btn" class="control-btn" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                    <path d="M21 3v5h-5"/>
+                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                    <path d="M3 21v-5h5"/>
+                  </svg>
+                  Replay
+                </button>
+                <button id="download-btn" class="control-btn" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7,10 12,15 17,10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                  Download SVG
+                </button>
+              </div>
+            </div>
+            
+            <div id="loading" class="loading hidden">
+              <div class="loading-spinner"></div>
+              <p>Generating handwriting...</p>
+            </div>
+            
+            <div id="error" class="error hidden">
+              <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+              </svg>
+              <p id="error-message">Something went wrong. Please try again.</p>
+            </div>
+            
+            <div id="handwriting-container" class="handwriting-container">
+              <div class="placeholder">
+                <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+                  <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+                  <path d="M2 2l7.586 7.586"/>
+                  <circle cx="11" cy="11" r="2"/>
+                </svg>
+                <p>Your handwriting will appear here</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <div class="container">
+          <p>Powered by AI handwriting synthesis • Based on "Generating Sequences with Recurrent Neural Networks" by Alex Graves</p>
+        </div>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
