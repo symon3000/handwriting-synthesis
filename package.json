@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "python-server": "python -m http.server 8001"
+    "python-server": "python server.py"
   },
   "devDependencies": {
     "vite": "^5.4.2"
